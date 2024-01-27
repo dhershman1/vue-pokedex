@@ -21,11 +21,25 @@ export const usePokemonStore = defineStore('pokemon', () => {
     generation.value = splitGen[splitGen.length - 2]
   }
 
+  function findEnFlavorText (flavorText) {
+    if (!flavorText.length) {
+      return ''
+    }
+
+    const found = flavorText.find(fl => fl.language.name === 'en')
+
+    if (!found) {
+      return flavorText[0].flavor_text
+    }
+
+    return found.flavor_text
+  }
+
   async function fetchSpeciesData (speciesLink) {
     const species = await axios.get(speciesLink)
 
     currentSpecies.value = species.data
-    flavorText.value = species.data.flavor_text_entries[0].flavor_text
+    flavorText.value = findEnFlavorText(species.data.flavor_text_entries)
 
     return species.data
   }

@@ -9,7 +9,11 @@
 
   const monStore = usePokemonStore()
 
-  async function getPokemon () {
+  async function getPokemon (pokemon = null) {
+    if (pokemon) {
+      mon.value = pokemon
+    }
+
     await monStore.fetchPokemon(mon.value)
   }
 
@@ -58,17 +62,18 @@
       <section class="stats">
         <table>
           <tr>
-            <th v-for="s in Object.keys(monStore.currentMon.stats)" :key="s">{{ s }}</th>
+            <th v-for="s in Object.keys(monStore.currentMon.stats)">{{ s }}</th>
           </tr>
           <tr>
-            <td v-for="level in Object.values(monStore.currentMon.stats)" :key="level">{{ level }}</td>
+            <td v-for="level in Object.values(monStore.currentMon.stats)">{{ level }}</td>
           </tr>
         </table>
       </section>
     </template>
   </card>
   <label>Search for a Pokemon: </label>
-  <input v-model="mon" @change="getPokemon" />
+  <input v-model="mon" @change="getPokemon()" />
+  <button @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
 </template>
 
 
