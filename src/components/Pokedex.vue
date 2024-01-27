@@ -44,7 +44,7 @@
         </span>
       </section>
       <section class="details">
-        <table>
+        <table class="mb-1">
           <tr>
             <th>Name</th>
             <th>Height</th>
@@ -78,6 +78,10 @@
 
 
 <style scopes>
+.mb-1 {
+  margin-bottom: 0.3rem;
+}
+
 .w-50 {
   width: 50%;
 }
@@ -91,16 +95,8 @@
   font-weight: bold;
 }
 
-td,
-th {
+th, td {
   text-transform: capitalize;
-}
-
-th {
-  padding: 0.5rem;
-}
-
-td {
   padding: 0.5rem;
   border: 1px solid var(--char);
   text-align: center;
@@ -108,5 +104,9 @@ td {
 
 input {
   margin-top: 1rem;
+}
+
+table {
+  border-collapse: collapse;
 }
 </style>
