@@ -6,6 +6,7 @@
 
   const randomPokemon = Math.floor(Math.random() * 1026)
   const mon = ref(randomPokemon)
+  const errored = ref(false)
 
   const monStore = usePokemonStore()
 
@@ -14,7 +15,12 @@
       mon.value = pokemon
     }
 
-    await monStore.fetchPokemon(mon.value)
+    try {
+      await monStore.fetchPokemon(mon.value)
+      errored.value = false
+    } catch (e) {
+      errored.value = true
+    }
   }
 
   onMounted(async () => {
@@ -25,7 +31,7 @@
 <template>
   <h1>Pokedex</h1>
   <section class="card__container">
-    <card>
+    <card v-if="!errored">
       <template #actions>
         <h2>{{ capitalize(monStore.currentMon.name) }}</h2>
       </template>
@@ -78,6 +84,9 @@
         </section>
       </template>
     </card>
+    <section v-else>
+      <h2>Pokemon Not Found</h2>
+    </section>
     <section class="controls">
       <label>Search for a Pokemon: </label>
       <input v-model="mon" @change="getPokemon()" />
