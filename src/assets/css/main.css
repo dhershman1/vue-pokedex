@@ -1,0 +1,59 @@
+:root {
+  --white: hsl(0, 0%, 100%);
+  --jet: hsl(120, 1%, 17%);
+  --dark: hsl(208, 37%, 20%);
+  --accent: hsl(8, 49%, 51%);
+  --shadow: hsla(0, 0%, 0%, 0.13);
+  --lightgrey: hsl(60, 3%, 93%);
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  background-color: var(--lightgrey);
+  color: var(--jet);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: all ease 0.2s;
+}
+
+a:hover {
+  color: var(--dark);
+}
+
+.grid {
+  display: grid;
+  grid-template-areas: 'main'
+    'footer';
+  grid-template-rows: 1fr min-content;
+  height: 100%;
+}
+
+main {
+  grid-area: main;
+  padding: 2rem;
+}
+
+footer {
+  grid-area: footer;
+  justify-self: center;
+  align-self: flex-end;
+}

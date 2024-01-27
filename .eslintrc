@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "$t": "readonly"
+  },
+  "ignorePatterns": ["index.html"],
+  "extends": [
+    "plugin:vue3-recommended",
+    "@vue/standard"
+  ],
+  "rules": {
+    "vue/multi-word-component-names": "off"
+  },
+  "settings": {
+    "vue-i18n": {
+      "localeDir": "./src/locales/*.js"
+    }
+  }
+}
