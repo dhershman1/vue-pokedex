@@ -13,7 +13,8 @@
     "feather-icons": "^4.29.1",
     "kyanite": "^2.0.1",
     "pinia": "^2.1.7",
-    "vue": "^3.3.11"
+    "vue": "^3.3.11",
+    "vue-feather": "^2.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

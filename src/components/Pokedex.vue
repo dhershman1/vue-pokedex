@@ -50,12 +50,17 @@
             <th>Height</th>
             <th>Weight</th>
             <th>Generation</th>
+            <th>Legendary</th>
           </tr>
           <tr>
             <td>{{ monStore.currentMon.name }}</td>
-            <td>{{ monStore.currentMon.height }}</td>
-            <td>{{ monStore.currentMon.weight }}</td>
+            <td>{{ monStore.currentMon.height }}cm</td>
+            <td>{{ monStore.currentMon.weight }}kg</td>
             <td>{{ monStore.generation }}</td>
+            <td>
+              <vue-feather type="check" v-if="monStore.currentMon.legendary" />
+              <vue-feather type="x" v-else></vue-feather>
+            </td>
           </tr>
         </table>
       </section>
@@ -78,14 +83,6 @@
 
 
 <style scopes>
-.mb-1 {
-  margin-bottom: 0.3rem;
-}
-
-.w-50 {
-  width: 50%;
-}
-
 .info {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -98,7 +95,7 @@
 th, td {
   text-transform: capitalize;
   padding: 0.5rem;
-  border: 1px solid var(--char);
+  border: 1px solid var(--lightgrey);
   text-align: center;
 }
 
@@ -108,5 +105,11 @@ input {
 
 table {
   border-collapse: collapse;
+}
+
+@media (prefers-color-scheme: light) {
+  th, td {
+    border-color: var(--char);
+  }
 }
 </style>

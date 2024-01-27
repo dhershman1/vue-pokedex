@@ -9,6 +9,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
     sprite: '',
     weight: 0,
     height: 0,
+    legendary: false,
     stats: {}
   })
   const currentSpecies = ref({})
@@ -39,29 +40,35 @@ export const usePokemonStore = defineStore('pokemon', () => {
     const species = await axios.get(speciesLink)
 
     currentSpecies.value = species.data
-    flavorText.value = findEnFlavorText(species.data.flavor_text_entries)
 
     return species.data
   }
 
   async function fetchPokemon (pokemon) {
-    const mon = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-    const speciesData = await fetchSpeciesData(mon.data.species.url)
+    const { data: mon } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+    // const speciesData = await fetchSpeciesData(mon.species.url)
+
+    const [speciesData] = await Promise.all([
+      fetchSpeciesData(mon.species.url)
+    ])
+
+    flavorText.value = findEnFlavorText(speciesData.flavor_text_entries)
 
     pullGenFromURL(speciesData.generation.url)
 
-    currentMon.name = mon.data.name
-    currentMon.sprite = mon.data.sprites.front_default
-    currentMon.types = mon.data.types.map(({ type }) => type.name)
-    currentMon.weight = mon.data.weight
-    currentMon.height = mon.data.height
-    currentMon.stats = mon.data.stats.reduce((acc, s) => {
+    currentMon.name = mon.name
+    currentMon.legendary = speciesData.is_legendary || speciesData.is_mythical
+    currentMon.sprite = mon.sprites.front_default
+    currentMon.types = mon.types.map(({ type }) => type.name)
+    currentMon.weight = (mon.weight * 0.1).toFixed(2)
+    currentMon.height = mon.height * 10
+    currentMon.stats = mon.stats.reduce((acc, s) => {
       acc[s.stat.name] = s.base_stat
 
       return acc
     }, {})
 
-    return mon.data
+    return mon
   }
 
   return {

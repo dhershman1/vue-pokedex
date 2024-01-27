@@ -32,8 +32,9 @@
 }
 
 .electric {
+  color: var(--dark);
   background-color: #f2d054;
-  border-color: #f2d054
+  border-color: #f2d054;
 }
 
 .fairy {
@@ -100,6 +101,7 @@
 }
 
 .steel {
+  color: var(--dark);
   background-color: #b8b8ce;
   border-color: #b8b8ce;
 }
@@ -108,4 +110,8 @@
   color: var(--white);
   background-color: #6f91e9;
   border-color: #6f91e9;
+}
+
+@media (prefers-color-scheme: light) {
+
 }

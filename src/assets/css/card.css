@@ -58,6 +58,10 @@
   .card-container {
     grid-template-columns: 1fr;
   }
+
+  .card__main {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-color-scheme: light) {
