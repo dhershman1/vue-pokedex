@@ -1,10 +1,11 @@
 <script setup>
-  import { onMounted, ref } from 'vue'
+  import { onMounted, ref, computed } from 'vue'
   import { capitalize } from 'kyanite'
   import { usePokemonStore } from '../stores/pokemon'
   import Card from './Card.vue'
 
-  const mon = ref(1)
+  const randomPokemon = Math.floor(Math.random() * 1026)
+  const mon = ref(randomPokemon)
 
   const monStore = usePokemonStore()
 
