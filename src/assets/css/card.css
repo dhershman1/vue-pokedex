@@ -23,6 +23,7 @@
   display: flex;
   padding: 0.5rem;
   justify-content: end;
+  border-top: 2px solid var(--accent);
 }
 
 .card__main {
@@ -37,21 +38,9 @@
   text-align: center;
 }
 
-.portfolio .card__main {
-  grid-template-columns: 1fr;
-}
-
-.card__main img {
-  max-width: 100px;
-}
-
 .card__text {
   padding: 1rem;
   width: 100%;
-}
-
-.portfolio .card__text {
-  text-align: left;
 }
 
 @media only screen and (max-width: 768px) {
