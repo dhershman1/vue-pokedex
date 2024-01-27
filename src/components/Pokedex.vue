@@ -33,28 +33,36 @@
     </template>
 
     <template #text>
-      <article class="info">
-        <section class="details">
-          <p class="heading">Name:</p>
-          <p>{{ monStore.currentMon.name }}</p>
-          <p class="heading">Height:</p>
-          <p>{{ monStore.currentMon.height }}</p>
-          <p class="heading">Weight:</p>
-          <p>{{ monStore.currentMon.weight }}</p>
-          <p class="heading">Generation:</p>
-          <p>{{ monStore.generation }}</p>
-        </section>
-        <section class="stats">
-          <span v-for="([stat, level]) in Object.entries(monStore.currentMon.stats)" :key="stat">
-            <p class="heading">{{ stat }}:</p>
-            <p>{{ level }}</p>
-          </span>
-        </section>
-      </article>
       <section class="types">
         <span :class="['type', monType]" v-for="monType in monStore.currentMon.types" :key="monType">
           {{ capitalize(monType) }}
         </span>
+      </section>
+      <section class="details">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Height</th>
+            <th>Weight</th>
+            <th>Generation</th>
+          </tr>
+          <tr>
+            <td>{{ monStore.currentMon.name }}</td>
+            <td>{{ monStore.currentMon.height }}</td>
+            <td>{{ monStore.currentMon.weight }}</td>
+            <td>{{ monStore.generation }}</td>
+          </tr>
+        </table>
+      </section>
+      <section class="stats">
+        <table>
+          <tr>
+            <th v-for="s in Object.keys(monStore.currentMon.stats)" :key="s">{{ s }}</th>
+          </tr>
+          <tr>
+            <td v-for="level in Object.values(monStore.currentMon.stats)" :key="level">{{ level }}</td>
+          </tr>
+        </table>
       </section>
     </template>
   </card>
@@ -77,9 +85,19 @@
   font-weight: bold;
 }
 
-p {
+td,
+th {
   text-transform: capitalize;
-  margin: 0
+}
+
+th {
+  padding: 0.5rem;
+}
+
+td {
+  padding: 0.5rem;
+  border: 1px solid var(--char);
+  text-align: center;
 }
 
 input {
