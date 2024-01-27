@@ -1,5 +1,5 @@
 <script setup>
-  import { onMounted, ref, computed } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { capitalize } from 'kyanite'
   import { usePokemonStore } from '../stores/pokemon'
   import Card from './Card.vue'
