@@ -24,65 +24,76 @@
 
 <template>
   <h1>Pokedex</h1>
-  <card class="w-50">
-    <template #main>
-      <div class="card__img">
-        <img
-          :src="monStore.currentMon.sprite"
-          alt="Pokemon"
-        />
-      </div>
-      <div class="flavor-text">
-        <p>{{ monStore.flavorText }}</p>
-      </div>
-    </template>
+  <section class="card__container">
+    <card>
+      <template #actions>
+        <h2>{{ capitalize(monStore.currentMon.name) }}</h2>
+      </template>
+      <template #main>
+        <div class="card__img">
+          <img
+            :src="monStore.currentMon.sprite"
+            alt="Pokemon"
+          />
+        </div>
+        <div class="flavor-text">
+          <p>{{ monStore.flavorText }}</p>
+        </div>
+      </template>
 
-    <template #text>
-      <section class="types">
-        <span :class="['type', monType]" v-for="monType in monStore.currentMon.types" :key="monType">
-          {{ capitalize(monType) }}
-        </span>
-      </section>
-      <section class="details">
-        <table class="mb-1">
-          <tr>
-            <th>Name</th>
-            <th>Height</th>
-            <th>Weight</th>
-            <th>Generation</th>
-            <th>Legendary</th>
-          </tr>
-          <tr>
-            <td>{{ monStore.currentMon.name }}</td>
-            <td>{{ monStore.currentMon.height }}cm</td>
-            <td>{{ monStore.currentMon.weight }}kg</td>
-            <td>{{ monStore.generation }}</td>
-            <td>
-              <vue-feather type="check" v-if="monStore.currentMon.legendary" />
-              <vue-feather type="x" v-else></vue-feather>
-            </td>
-          </tr>
-        </table>
-      </section>
-      <section class="stats">
-        <table>
-          <tr>
-            <th v-for="s in Object.keys(monStore.currentMon.stats)">{{ s }}</th>
-          </tr>
-          <tr>
-            <td v-for="level in Object.values(monStore.currentMon.stats)">{{ level }}</td>
-          </tr>
-        </table>
-      </section>
-    </template>
-  </card>
-  <label>Search for a Pokemon: </label>
-  <input v-model="mon" @change="getPokemon()" />
-  <button @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+      <template #text>
+        <section class="types">
+          <span :class="['type', monType]" v-for="monType in monStore.currentMon.types" :key="monType">
+            {{ capitalize(monType) }}
+          </span>
+        </section>
+        <section class="details">
+          <table class="mb-1">
+            <tr>
+              <th>Height</th>
+              <th>Weight</th>
+              <th>Generation</th>
+              <th>Legendary</th>
+            </tr>
+            <tr>
+              <td>{{ monStore.currentMon.height }}cm</td>
+              <td>{{ monStore.currentMon.weight }}kg</td>
+              <td>{{ monStore.generation }}</td>
+              <td>
+                <vue-feather type="check" v-if="monStore.currentMon.legendary" />
+                <vue-feather type="x" v-else></vue-feather>
+              </td>
+            </tr>
+          </table>
+        </section>
+        <section class="stats">
+          <table>
+            <tr>
+              <th v-for="s in Object.keys(monStore.currentMon.stats)">{{ s }}</th>
+            </tr>
+            <tr>
+              <td v-for="level in Object.values(monStore.currentMon.stats)">{{ level }}</td>
+            </tr>
+          </table>
+        </section>
+      </template>
+    </card>
+    <section class="controls">
+      <label>Search for a Pokemon: </label>
+      <input v-model="mon" @change="getPokemon()" />
+      <button @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+    </section>
+  </section>
 </template>
 
 
 <style scopes>
+.details,
+.stats {
+  display: flex;
+  justify-content: center;
+}
+
 .info {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -90,6 +101,10 @@
 
 .heading {
   font-weight: bold;
+}
+
+h1 {
+  margin-top: 0;
 }
 
 th, td {

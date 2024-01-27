@@ -1,10 +1,6 @@
-.card-container {
-  margin-top: 1rem;
+.card__container {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr 1fr 1fr;
-  max-width: fit-content;
-  margin: 0 auto;
+  justify-content: center;
 }
 
 .card {
@@ -22,7 +18,7 @@
   align-items: center;
   display: flex;
   padding: 0.5rem;
-  justify-content: end;
+  padding-left: 1rem;
   border-top: 2px solid var(--accent);
 }
 
