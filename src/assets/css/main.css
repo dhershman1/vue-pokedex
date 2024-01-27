@@ -5,13 +5,15 @@
   --accent: hsl(8, 49%, 51%);
   --shadow: hsla(0, 0%, 0%, 0.13);
   --lightgrey: hsl(60, 3%, 93%);
+  --char: hsl(0, 4%, 22%);
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  background-color: var(--lightgrey);
-  color: var(--jet);
+  color-scheme: light dark;
+  background-color: var(--jet);
+  color: var(--lightgrey);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -36,7 +38,7 @@ a {
 }
 
 a:hover {
-  color: var(--dark);
+  color: var(--lightgrey);
 }
 
 .grid {
@@ -56,4 +58,19 @@ footer {
   grid-area: footer;
   justify-self: center;
   align-self: flex-end;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--dark);
+    background-color: var(--lightgrey);
+  }
+
+  a:hover {
+    color: var(--dark);
+  }
+
+  h2 {
+    color: var(--dark);
+  }
 }

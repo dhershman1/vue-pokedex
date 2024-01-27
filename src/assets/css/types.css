@@ -20,6 +20,7 @@
 }
 
 .dark {
+  color: var(--white);
   background-color: #6c584a;
   border-color: #6c584a;
 }
