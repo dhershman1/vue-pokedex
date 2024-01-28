@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { path } from 'kyanite'
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
@@ -61,14 +60,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
     const [speciesData] = await Promise.all([
       fetchSpeciesData(mon.species.url)
     ])
-
-    // console.log(findBy(
-    //   {
-    //     'language.name': 'en',
-    //     'version.name': 'alpha-sapphire'
-    //   },
-    //   speciesData.flavor_text_entries
-    // ))
 
     flavorText.value = findEnFlavorText(speciesData.flavor_text_entries)
     genera.value = findEnLocale(speciesData.genera)?.genus ?? ''
