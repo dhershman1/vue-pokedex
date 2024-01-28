@@ -39,7 +39,7 @@
     <p>
       Fetching Pokemon...
     </p>
-    <vue-feather type="settings" animation="spin" animation-speed="fast"></vue-feather>
+    <vue-feather type="settings" animation="spin"></vue-feather>
   </section>
   <section v-else class="card__container">
     <card v-if="!errored">
