@@ -18,8 +18,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
   const genera = ref({})
   const nationalDex = ref('')
 
-
-
   function pullGenFromURL (genURL) {
     const splitGen = genURL.split('/')
 
