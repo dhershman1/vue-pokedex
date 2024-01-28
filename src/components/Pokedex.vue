@@ -114,7 +114,7 @@
 </template>
 
 
-<style scopes>
+<style scoped>
 .details,
 .stats {
   display: flex;
