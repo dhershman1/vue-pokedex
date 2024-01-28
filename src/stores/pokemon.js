@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { reactive, ref } from 'vue'
+import { path } from 'kyanite'
 import { defineStore } from 'pinia'
+import { reactive, ref } from 'vue'
 
 export const usePokemonStore = defineStore('pokemon', () => {
   const currentMon = reactive({
@@ -12,9 +13,12 @@ export const usePokemonStore = defineStore('pokemon', () => {
     legendary: false,
     stats: {}
   })
-  const currentSpecies = ref({})
   const generation = ref(1)
   const flavorText = ref('')
+  const genera = ref({})
+  const nationalDex = ref('')
+
+
 
   function pullGenFromURL (genURL) {
     const splitGen = genURL.split('/')
@@ -22,15 +26,25 @@ export const usePokemonStore = defineStore('pokemon', () => {
     generation.value = splitGen[splitGen.length - 2]
   }
 
+  function findEnLocale (data) {
+    const found = data.find(d => d.language.name === 'en')
+
+    if (found) {
+      return found
+    }
+
+    return null
+  }
+
   function findEnFlavorText (flavorText) {
     if (!flavorText.length) {
       return ''
     }
 
-    const found = flavorText.find(fl => fl.language.name === 'en')
+    const found = flavorText.find(fl => fl.language.name === 'en' && fl.version.name === 'alpha-sapphire')
 
     if (!found) {
-      return flavorText[0].flavor_text
+      return flavorText.find(fl => fl.language.name === 'en').flavor_text || flavorText[0].flavor_text
     }
 
     return found.flavor_text
@@ -38,8 +52,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
   async function fetchSpeciesData (speciesLink) {
     const species = await axios.get(speciesLink)
-
-    currentSpecies.value = species.data
 
     return species.data
   }
@@ -52,11 +64,23 @@ export const usePokemonStore = defineStore('pokemon', () => {
       fetchSpeciesData(mon.species.url)
     ])
 
+    // console.log(findBy(
+    //   {
+    //     'language.name': 'en',
+    //     'version.name': 'alpha-sapphire'
+    //   },
+    //   speciesData.flavor_text_entries
+    // ))
+
     flavorText.value = findEnFlavorText(speciesData.flavor_text_entries)
+    genera.value = findEnLocale(speciesData.genera)?.genus ?? ''
+    nationalDex.value = speciesData.pokedex_numbers.find(
+      dex => dex.pokedex.name === 'national'
+    ).entry_number
 
     pullGenFromURL(speciesData.generation.url)
 
-    currentMon.name = mon.name
+    currentMon.name = findEnLocale(speciesData.names)?.name ?? mon.name
     currentMon.legendary = speciesData.is_legendary || speciesData.is_mythical
     currentMon.sprite = mon.sprites.front_default
     currentMon.types = mon.types.map(({ type }) => type.name)
@@ -73,9 +97,10 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
   return {
     currentMon,
-    currentSpecies,
     generation,
+    genera,
     flavorText,
+    nationalDex,
     fetchPokemon,
     fetchSpeciesData
   }

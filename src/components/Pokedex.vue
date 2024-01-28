@@ -7,10 +7,12 @@
   const randomPokemon = Math.floor(Math.random() * 1026)
   const mon = ref(randomPokemon)
   const errored = ref(false)
+  const loading = ref(true)
 
   const monStore = usePokemonStore()
 
   async function getPokemon (pokemon = null) {
+    loading.value = true
     if (pokemon) {
       mon.value = pokemon
     }
@@ -20,20 +22,31 @@
       errored.value = false
     } catch (e) {
       errored.value = true
+    } finally {
+      loading.value = false
     }
   }
 
   onMounted(async () => {
     await monStore.fetchPokemon(mon.value)
+    loading.value = false
   })
 </script>
 
 <template>
   <h1>Pokedex</h1>
-  <section class="card__container">
+  <section v-if="loading">
+    <p>
+      Fetching Pokemon...
+    </p>
+    <vue-feather type="settings" animation="spin" animation-speed="fast"></vue-feather>
+  </section>
+  <section v-else class="card__container">
     <card v-if="!errored">
       <template #actions>
-        <h2>{{ capitalize(monStore.currentMon.name) }}</h2>
+        <h2>
+          {{ capitalize(monStore.currentMon.name) }} #{{ monStore.nationalDex }}
+        </h2>
       </template>
       <template #main>
         <div class="card__img">
@@ -48,6 +61,9 @@
       </template>
 
       <template #text>
+        <section class="genera">
+          {{ monStore.genera }}
+        </section>
         <section class="types">
           <span :class="['type', monType]" v-for="monType in monStore.currentMon.types" :key="monType">
             {{ capitalize(monType) }}
@@ -56,12 +72,14 @@
         <section class="details">
           <table class="mb-1">
             <tr>
+              <th>National Dex</th>
               <th>Height</th>
               <th>Weight</th>
               <th>Generation</th>
               <th>Legendary</th>
             </tr>
             <tr>
+              <td>{{ monStore.nationalDex }}</td>
               <td>{{ monStore.currentMon.height }}cm</td>
               <td>{{ monStore.currentMon.weight }}kg</td>
               <td>{{ monStore.generation }}</td>
@@ -87,11 +105,11 @@
     <section v-else>
       <h2>Pokemon Not Found</h2>
     </section>
-    <section class="controls">
-      <label>Search for a Pokemon: </label>
-      <input v-model="mon" @change="getPokemon()" />
-      <button @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
-    </section>
+  </section>
+  <section class="controls">
+    <label>Search for a Pokemon: </label>
+    <input v-model="mon" @change="getPokemon()" />
+    <button @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
   </section>
 </template>
 
