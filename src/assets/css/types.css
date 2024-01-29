@@ -70,6 +70,7 @@
 }
 
 .ground {
+  color: var(--dark);
   background-color: #dbc074;
   border-color: #dbc074;
 }

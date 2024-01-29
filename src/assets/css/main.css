@@ -3,9 +3,11 @@
   --jet: hsl(120, 1%, 17%);
   --dark: hsl(208, 37%, 20%);
   --accent: hsl(8, 49%, 51%);
+  --accent-lighten: hsl(8, 65%, 57%);
   --shadow: hsla(0, 0%, 0%, 0.13);
   --lightgrey: hsl(60, 3%, 93%);
   --char: hsl(0, 4%, 22%);
+  --btn-shadow: hsla(0, 0%, 0%, 0.02);
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -47,6 +49,7 @@ a:hover {
     'footer';
   grid-template-rows: 1fr min-content;
   height: 100%;
+  gap: 1rem;
 }
 
 main {
@@ -58,6 +61,12 @@ footer {
   grid-area: footer;
   justify-self: center;
   align-self: flex-end;
+}
+
+.pokedex__container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 @media (prefers-color-scheme: light) {

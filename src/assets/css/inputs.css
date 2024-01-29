@@ -1,0 +1,39 @@
+/* Control */
+.control {
+  padding: 0.2rem 0.6rem;
+  margin: 0;
+  font-size: 14px;
+  color: var(--dark);
+  background-color: var(--white);
+  border: 1px solid var(--lightgrey);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.control:hover {
+  border-color: var(--accent);
+}
+
+.control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px hsla(206, 100%, 51%, 0.1);
+  outline: 0;
+}
+
+.control__file {
+  border: 5px dashed var(--lightgrey);
+  border-radius: 0;
+  padding: 2rem 0.5rem;
+}
+
+label p {
+  margin: 0 0 0.4rem 0;
+}
+/* End Control */
+
+@media (prefers-color-scheme: light) {
+  .control,
+  .control__file {
+    border-color: var(--dark);
+  }
+}
