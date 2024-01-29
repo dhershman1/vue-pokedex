@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
 export const usePokemonStore = defineStore('pokemon', () => {
+  const baseURL = 'https://pokeapi.co/api/v2'
   const currentMon = reactive({
     name: '',
     types: [],
@@ -54,7 +55,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
   }
 
   async function fetchPokemon (pokemon) {
-    const { data: mon } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+    const { data: mon } = await axios.get(`${baseURL}/pokemon/${pokemon}`)
     // const speciesData = await fetchSpeciesData(mon.species.url)
 
     const [speciesData] = await Promise.all([
