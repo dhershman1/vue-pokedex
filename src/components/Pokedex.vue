@@ -45,7 +45,10 @@ onMounted(async () => {
       <p>
         Fetching Pokemon...
       </p>
-      <vue-feather type="settings" animation="spin"></vue-feather>
+      <vue-feather
+        type="settings"
+        animation="spin"
+      />
     </section>
     <card v-if="!loading && !errored">
       <template #actions>
@@ -55,7 +58,10 @@ onMounted(async () => {
       </template>
       <template #main>
         <div class="card__img">
-          <img :src="monStore.currentMon.sprite" alt="Pokemon" />
+          <img
+            :src="monStore.currentMon.sprite"
+            alt="Pokemon"
+          >
         </div>
         <div class="flavor-text">
           <p>{{ monStore.flavorText }}</p>
@@ -67,7 +73,11 @@ onMounted(async () => {
           {{ monStore.genera }}
         </section>
         <section class="types">
-          <span :class="['type', monType]" v-for="monType in monStore.currentMon.types" :key="monType">
+          <span
+            v-for="monType in monStore.currentMon.types"
+            :key="monType"
+            :class="['type', monType]"
+          >
             {{ capitalize(monType) }}
           </span>
         </section>
@@ -86,8 +96,14 @@ onMounted(async () => {
               <td>{{ monStore.currentMon.weight }}kg</td>
               <td>{{ monStore.generation }}</td>
               <td>
-                <vue-feather type="check" v-if="monStore.currentMon.legendary" />
-                <vue-feather type="x" v-else></vue-feather>
+                <vue-feather
+                  v-if="monStore.currentMon.legendary"
+                  type="check"
+                />
+                <vue-feather
+                  v-else
+                  type="x"
+                />
               </td>
             </tr>
           </table>
@@ -95,10 +111,20 @@ onMounted(async () => {
         <section class="stats">
           <table>
             <tr>
-              <th v-for="s in Object.keys(monStore.currentMon.stats)" :key="s">{{ s }}</th>
+              <th
+                v-for="s in Object.keys(monStore.currentMon.stats)"
+                :key="s"
+              >
+                {{ s }}
+              </th>
             </tr>
             <tr>
-              <td v-for="(level, i) in Object.values(monStore.currentMon.stats)" :key="i">{{ level }}</td>
+              <td
+                v-for="(level, i) in Object.values(monStore.currentMon.stats)"
+                :key="i"
+              >
+                {{ level }}
+              </td>
             </tr>
           </table>
         </section>
@@ -111,16 +137,32 @@ onMounted(async () => {
       <template #controls>
         <section class="controls">
           <label>Search for a Pokemon: </label>
-          <simple-typeahead id="pokemonSearch" class="control" placeholder="By Name"
-            :items="searchStore.fullMonList.map(p => p.name)" :min-input-length="2" @select-item="getPokemon" />
-          <input class="mb-1 control" placeholder="By ID" v-model="mon" @change="getPokemon()" />
+          <simple-typeahead
+            id="pokemonSearch"
+            class="control"
+            placeholder="By Name"
+            :items="searchStore.fullMonList.map(p => p.name)"
+            :min-input-length="2"
+            @select-item="getPokemon"
+          />
+          <input
+            v-model="mon"
+            class="mb-1 control"
+            placeholder="By ID"
+            @change="getPokemon()"
+          >
           <div>
-            <button class="ml-1 btn btn__primary" @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+            <button
+              class="ml-1 btn btn__primary"
+              @click="getPokemon(Math.floor(Math.random() * 1026))"
+            >
+              Random
+            </button>
           </div>
         </section>
       </template>
       <template #artwork>
-        <img :src="monStore.artwork" />
+        <img :src="monStore.artwork">
       </template>
     </pokemon-search>
   </section>
