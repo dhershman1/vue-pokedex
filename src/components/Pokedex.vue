@@ -1,8 +1,11 @@
 <script setup>
   import { onMounted, ref } from 'vue'
   import { capitalize } from 'kyanite'
+  import SimpleTypeahead from 'vue3-simple-typeahead'
   import { usePokemonStore } from '../stores/pokemon'
+  import { useSearchStore } from '../stores/search'
   import Card from './Card.vue'
+  import PokemonSearch from './PokemonSearch.vue'
 
   const randomPokemon = Math.floor(Math.random() * 1026)
   const mon = ref(randomPokemon)
@@ -10,6 +13,7 @@
   const loading = ref(true)
 
   const monStore = usePokemonStore()
+  const searchStore = useSearchStore()
 
   async function getPokemon (pokemon = null) {
     loading.value = true
@@ -28,6 +32,7 @@
   }
 
   onMounted(async () => {
+    await searchStore.fetchAllMons()
     await monStore.fetchPokemon(mon.value)
     loading.value = false
   })
@@ -35,14 +40,14 @@
 
 <template>
   <h1>Pokedex</h1>
-  <section v-if="loading">
-    <p>
-      Fetching Pokemon...
-    </p>
-    <vue-feather type="settings" animation="spin"></vue-feather>
-  </section>
-  <section v-else class="card__container">
-    <card v-if="!errored">
+  <section class="pokedex__container">
+    <section v-if="loading">
+      <p>
+        Fetching Pokemon...
+      </p>
+      <vue-feather type="settings" animation="spin"></vue-feather>
+    </section>
+    <card v-if="!loading && !errored">
       <template #actions>
         <h2>
           {{ capitalize(monStore.currentMon.name) }} #{{ monStore.nationalDex }}
@@ -102,14 +107,26 @@
         </section>
       </template>
     </card>
-    <section v-else>
+    <section v-else-if="errored">
       <h2>Pokemon Not Found</h2>
     </section>
-  </section>
-  <section class="controls">
-    <label>Search for a Pokemon: </label>
-    <input v-model="mon" @change="getPokemon()" />
-    <button @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+    <pokemon-search>
+      <template #controls>
+        <section class="controls">
+          <label>Search for a Pokemon: </label>
+          <simple-typeahead
+            id="pokemonSearch"
+            class="control"
+            placeholder="By Name"
+            :items="searchStore.fullMonList.map(p => p.name)"
+            :min-input-length="1"
+            @select-item="getPokemon"
+          />
+          <input class="control" placeholder="By ID" v-model="mon" @change="getPokemon()" />
+          <button class="ml-1 btn btn__primary" @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+        </section>
+      </template>
+    </pokemon-search>
   </section>
 </template>
 
