@@ -119,6 +119,9 @@ onMounted(async () => {
           </div>
         </section>
       </template>
+      <template #artwork>
+        <img :src="monStore.artwork" />
+      </template>
     </pokemon-search>
   </section>
 </template>

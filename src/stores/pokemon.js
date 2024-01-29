@@ -17,6 +17,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
   const flavorText = ref('')
   const genera = ref({})
   const nationalDex = ref('')
+  const artwork = ref('')
 
   function pullGenFromURL (genURL) {
     const splitGen = genURL.split('/')
@@ -70,6 +71,8 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
     pullGenFromURL(speciesData.generation.url)
 
+    artwork.value = mon.sprites.other['official-artwork'].front_default
+
     currentMon.name = findEnLocale(speciesData.names)?.name ?? mon.name
     currentMon.legendary = speciesData.is_legendary || speciesData.is_mythical
     currentMon.sprite = mon.sprites.front_default
@@ -86,6 +89,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
   }
 
   return {
+    artwork,
     currentMon,
     generation,
     genera,
