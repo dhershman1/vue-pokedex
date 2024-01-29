@@ -7,9 +7,12 @@
   "globals": {
     "$t": "readonly"
   },
-  "ignorePatterns": ["index.html"],
+  "ignorePatterns": [
+    "index.html"
+  ],
   "extends": [
-    "plugin:vue3-recommended",
+    "plugin:vue/vue3-essential",
+    "eslint:recommended",
     "@vue/standard"
   ],
   "rules": {

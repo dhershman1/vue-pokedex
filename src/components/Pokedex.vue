@@ -1,41 +1,41 @@
 <script setup>
-  import { onMounted, ref } from 'vue'
-  import { capitalize } from 'kyanite'
-  import SimpleTypeahead from 'vue3-simple-typeahead'
-  import { usePokemonStore } from '../stores/pokemon'
-  import { useSearchStore } from '../stores/search'
-  import Card from './Card.vue'
-  import PokemonSearch from './PokemonSearch.vue'
+import { onMounted, ref } from 'vue'
+import { capitalize } from 'kyanite'
+import SimpleTypeahead from 'vue3-simple-typeahead'
+import { usePokemonStore } from '../stores/pokemon'
+import { useSearchStore } from '../stores/search'
+import Card from './Card.vue'
+import PokemonSearch from './PokemonSearch.vue'
 
-  const randomPokemon = Math.floor(Math.random() * 1026)
-  const mon = ref(randomPokemon)
-  const errored = ref(false)
-  const loading = ref(true)
+const randomPokemon = Math.floor(Math.random() * 1026)
+const mon = ref(randomPokemon)
+const errored = ref(false)
+const loading = ref(true)
 
-  const monStore = usePokemonStore()
-  const searchStore = useSearchStore()
+const monStore = usePokemonStore()
+const searchStore = useSearchStore()
 
-  async function getPokemon (pokemon = null) {
-    loading.value = true
-    if (pokemon) {
-      mon.value = pokemon
-    }
-
-    try {
-      await monStore.fetchPokemon(mon.value)
-      errored.value = false
-    } catch (e) {
-      errored.value = true
-    } finally {
-      loading.value = false
-    }
+async function getPokemon (pokemon = null) {
+  loading.value = true
+  if (pokemon) {
+    mon.value = pokemon
   }
 
-  onMounted(async () => {
-    await searchStore.fetchAllMons()
+  try {
     await monStore.fetchPokemon(mon.value)
+    errored.value = false
+  } catch (e) {
+    errored.value = true
+  } finally {
     loading.value = false
-  })
+  }
+}
+
+onMounted(async () => {
+  await searchStore.fetchAllMons()
+  await monStore.fetchPokemon(mon.value)
+  loading.value = false
+})
 </script>
 
 <template>
@@ -55,10 +55,7 @@
       </template>
       <template #main>
         <div class="card__img">
-          <img
-            :src="monStore.currentMon.sprite"
-            alt="Pokemon"
-          />
+          <img :src="monStore.currentMon.sprite" alt="Pokemon" />
         </div>
         <div class="flavor-text">
           <p>{{ monStore.flavorText }}</p>
@@ -98,10 +95,10 @@
         <section class="stats">
           <table>
             <tr>
-              <th v-for="s in Object.keys(monStore.currentMon.stats)">{{ s }}</th>
+              <th v-for="s in Object.keys(monStore.currentMon.stats)" :key="s">{{ s }}</th>
             </tr>
             <tr>
-              <td v-for="level in Object.values(monStore.currentMon.stats)">{{ level }}</td>
+              <td v-for="(level, i) in Object.values(monStore.currentMon.stats)" :key="i">{{ level }}</td>
             </tr>
           </table>
         </section>
@@ -114,22 +111,17 @@
       <template #controls>
         <section class="controls">
           <label>Search for a Pokemon: </label>
-          <simple-typeahead
-            id="pokemonSearch"
-            class="control"
-            placeholder="By Name"
-            :items="searchStore.fullMonList.map(p => p.name)"
-            :min-input-length="1"
-            @select-item="getPokemon"
-          />
-          <input class="control" placeholder="By ID" v-model="mon" @change="getPokemon()" />
-          <button class="ml-1 btn btn__primary" @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+          <simple-typeahead id="pokemonSearch" class="control" placeholder="By Name"
+            :items="searchStore.fullMonList.map(p => p.name)" :min-input-length="2" @select-item="getPokemon" />
+          <input class="mb-1 control" placeholder="By ID" v-model="mon" @change="getPokemon()" />
+          <div>
+            <button class="ml-1 btn btn__primary" @click="getPokemon(Math.floor(Math.random() * 1026))">Random</button>
+          </div>
         </section>
       </template>
     </pokemon-search>
   </section>
 </template>
-
 
 <style scoped>
 .details,
@@ -151,7 +143,8 @@ h1 {
   margin-top: 0;
 }
 
-th, td {
+th,
+td {
   text-transform: capitalize;
   padding: 0.5rem;
   border: 1px solid var(--lightgrey);
@@ -167,7 +160,9 @@ table {
 }
 
 @media (prefers-color-scheme: light) {
-  th, td {
+
+  th,
+  td {
     border-color: var(--char);
   }
 }
