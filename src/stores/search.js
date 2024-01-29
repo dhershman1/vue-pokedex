@@ -13,14 +13,9 @@ export const useSearchStore = defineStore('search', () => {
     fullMonList.value = mons.results
   }
 
-  function selectMon (a) {
-    console.log(a)
-  }
-
   return {
     fullMonList,
     fetchAllMons,
-    selectedMon,
-    selectMon
+    selectedMon
   }
 })
