@@ -8,6 +8,8 @@ import 'feather-icons'
 import './assets/css/main.css'
 import './assets/css/card.css'
 import './assets/css/types.css'
+import './assets/css/buttons.css'
+import './assets/css/inputs.css'
 import './assets/css/utils.css'
 
 const pinia = createPinia()
