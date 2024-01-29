@@ -5,11 +5,15 @@ import Pokedex from './components/Pokedex.vue'
 <template>
   <div class="grid">
     <main>
-      <pokedex></pokedex>
+      <pokedex />
     </main>
     <footer>
       <p>
-        Made With ❤️ by <a class="link" href="https://github.com/dhershman1" target="_blank">Dustin Hershman</a>
+        Made With ❤️ by <a
+          class="link"
+          href="https://github.com/dhershman1"
+          target="_blank"
+        >Dustin Hershman</a>
       </p>
     </footer>
   </div>
