@@ -13,7 +13,7 @@ const errored = ref(false)
 const loading = ref(true)
 
 const monStore = usePokemonStore()
-const searchStore = useSearchStore()
+const { fetchAllMons, fullMonList } = useSearchStore()
 
 async function getPokemon (pokemon = null) {
   loading.value = true
@@ -32,7 +32,7 @@ async function getPokemon (pokemon = null) {
 }
 
 onMounted(async () => {
-  await searchStore.fetchAllMons()
+  await fetchAllMons()
   await monStore.fetchPokemon(mon.value)
   loading.value = false
 })
@@ -141,7 +141,7 @@ onMounted(async () => {
             id="pokemonSearch"
             class="control"
             placeholder="By Name"
-            :items="searchStore.fullMonList.map(p => p.name)"
+            :items="fullMonList.map(p => p.name)"
             :min-input-length="2"
             @select-item="getPokemon"
           />
@@ -162,13 +162,28 @@ onMounted(async () => {
         </section>
       </template>
       <template #artwork>
-        <img :src="monStore.artwork">
+        <div v-if="!loading">
+          <img :src="monStore.artwork">
+        </div>
+        <div
+          v-else
+          class="center"
+        >
+          <vue-feather
+            type="settings"
+            animation="spin"
+          />
+        </div>
       </template>
     </pokemon-search>
   </section>
 </template>
 
 <style scoped>
+.center {
+  text-align: center;
+  vertical-align: middle;
+}
 .details,
 .stats {
   display: flex;
