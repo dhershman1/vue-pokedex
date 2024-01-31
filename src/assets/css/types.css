@@ -76,6 +76,7 @@
 }
 
 .ice {
+  color: var(--dark);
   background-color: #a6d6d7;
   border-color: #a6d6d7;
 }

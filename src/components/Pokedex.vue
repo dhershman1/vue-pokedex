@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { capitalize } from 'kyanite'
-import SimpleTypeahead from 'vue3-simple-typeahead'
 import { usePokemonStore } from '../stores/pokemon'
 import { useSearchStore } from '../stores/search'
 import Card from './Card.vue'
@@ -60,7 +59,7 @@ onMounted(async () => {
         <div class="card__img">
           <img
             :src="monStore.currentMon.sprite"
-            alt="Pokemon"
+            alt="Pokemon Sprite"
           >
         </div>
         <div class="flavor-text">
@@ -81,90 +80,69 @@ onMounted(async () => {
             {{ capitalize(monType) }}
           </span>
         </section>
-        <section class="details">
-          <table class="mb-1">
-            <tr>
-              <th>National Dex</th>
-              <th>Height</th>
-              <th>Weight</th>
-              <th>Generation</th>
-              <th>Legendary</th>
-            </tr>
-            <tr>
-              <td>{{ monStore.nationalDex }}</td>
-              <td>{{ monStore.currentMon.height }}cm</td>
-              <td>{{ monStore.currentMon.weight }}kg</td>
-              <td>{{ monStore.generation }}</td>
-              <td>
-                <vue-feather
-                  v-if="monStore.currentMon.legendary"
-                  type="check"
-                />
-                <vue-feather
-                  v-else
-                  type="x"
-                />
-              </td>
-            </tr>
-          </table>
-        </section>
-        <section class="stats">
-          <table>
-            <tr>
-              <th
-                v-for="s in Object.keys(monStore.currentMon.stats)"
-                :key="s"
-              >
-                {{ s }}
-              </th>
-            </tr>
-            <tr>
-              <td
-                v-for="(level, i) in Object.values(monStore.currentMon.stats)"
-                :key="i"
-              >
-                {{ level }}
-              </td>
-            </tr>
-          </table>
-        </section>
+        <div class="info">
+          <section class="details">
+            <table class="mb-1">
+              <tr>
+                <th>National Dex</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Generation</th>
+                <th>Legendary</th>
+              </tr>
+              <tr>
+                <td>{{ monStore.nationalDex }}</td>
+                <td>{{ monStore.currentMon.height }}cm</td>
+                <td>{{ monStore.currentMon.weight }}kg</td>
+                <td>{{ monStore.generation }}</td>
+                <td>
+                  <vue-feather
+                    v-if="monStore.currentMon.legendary"
+                    type="check"
+                  />
+                  <vue-feather
+                    v-else
+                    type="x"
+                  />
+                </td>
+              </tr>
+            </table>
+          </section>
+          <section class="stats">
+            <table>
+              <tr>
+                <th
+                  v-for="s in Object.keys(monStore.currentMon.stats)"
+                  :key="s"
+                >
+                  {{ s }}
+                </th>
+              </tr>
+              <tr>
+                <td
+                  v-for="(level, i) in Object.values(monStore.currentMon.stats)"
+                  :key="i"
+                >
+                  {{ level }}
+                </td>
+              </tr>
+            </table>
+          </section>
+        </div>
+        <div class="center artwork">
+          <img
+            alt="pokemon artwork"
+            :src="monStore.artwork"
+          >
+        </div>
       </template>
     </card>
     <section v-else-if="errored">
       <h2>Pokemon Not Found</h2>
     </section>
-    <pokemon-search>
-      <template #controls>
-        <section class="controls">
-          <label>Search for a Pokemon: </label>
-          <simple-typeahead
-            id="pokemonSearch"
-            class="control"
-            placeholder="By Name"
-            :items="searchStore.fullMonList.map(p => p.name)"
-            :min-input-length="2"
-            @select-item="getPokemon"
-          />
-          <input
-            v-model="mon"
-            class="mb-1 control"
-            placeholder="By ID"
-            @change="getPokemon()"
-          >
-          <div>
-            <button
-              class="ml-1 btn btn__primary"
-              @click="getPokemon(Math.floor(Math.random() * 1026))"
-            >
-              Random
-            </button>
-          </div>
-        </section>
-      </template>
-      <template #artwork>
-        <img :src="monStore.artwork">
-      </template>
-    </pokemon-search>
+    <pokemon-search
+      @select-mon="getPokemon"
+    />
   </section>
 </template>
 
@@ -173,11 +151,6 @@ onMounted(async () => {
 .stats {
   display: flex;
   justify-content: center;
-}
-
-.info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }
 
 .heading {
@@ -209,6 +182,28 @@ table {
   th,
   td {
     border-color: var(--char);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .flavor-text {
+    text-align: center;
+    max-width: 15rem;
+  }
+  .info {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .artwork {
+    margin: auto;
+    max-width: 20rem;
+    max-height: 20rem;
+  }
+
+  .artwork img {
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 </style>
