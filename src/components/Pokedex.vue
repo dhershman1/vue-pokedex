@@ -5,8 +5,7 @@ import { usePokemonStore } from '../stores/pokemon'
 import { useSearchStore } from '../stores/search'
 import PokemonSearch from './PokemonSearch.vue'
 
-const randomPokemon = Math.floor(Math.random() * 1026)
-const mon = ref(randomPokemon)
+const mon = ref(Math.floor(Math.random() * 1026))
 const errored = ref(false)
 const loading = ref(true)
 
@@ -30,8 +29,10 @@ async function getPokemon (pokemon = null) {
 }
 
 onMounted(async () => {
-  await searchStore.fetchAllMons()
-  await monStore.fetchPokemon(mon.value)
+  await Promise.all([
+    searchStore.fetchAllMons(),
+    monStore.fetchPokemon(mon.value)
+  ])
   loading.value = false
 })
 </script>
@@ -77,6 +78,23 @@ onMounted(async () => {
             <li><strong>Height</strong>: {{ monStore.currentMon.height }}cm</li>
             <li><strong>Weight</strong>: {{ monStore.currentMon.weight }}kg</li>
             <li><strong>Generation</strong>: {{ monStore.generation }}</li>
+            <li>
+              <strong>Legendary</strong>:
+              <span
+                v-if="monStore.currentMon.legendary"
+                class="legendary"
+              >
+                <vue-feather
+                  type="check"
+                />
+              </span>
+              <span
+                v-else
+                class="legendary"
+              >
+                <vue-feather type="x" />
+              </span>
+            </li>
           </ul>
         </article>
         <article class="panel">
@@ -107,7 +125,11 @@ ul {
 }
 
 li {
-  border-bottom: 1px solid var(--jet);
+  border-bottom: 1px solid var(--lightgrey);
+}
+
+li:last-child {
+  border: none;
 }
 
 .pokedex {
@@ -126,9 +148,13 @@ li {
   gap: 1rem;
 }
 
+.legendary i {
+  vertical-align: middle;
+}
+
 @media (prefers-color-scheme: light) {
   li {
-    border-bottom-color: var(--lightgrey);
+    border-color: var(--dark);
   }
 }
 
