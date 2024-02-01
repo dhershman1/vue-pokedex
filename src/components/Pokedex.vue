@@ -1,19 +1,16 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { capitalize } from 'kyanite'
-import SimpleTypeahead from 'vue3-simple-typeahead'
 import { usePokemonStore } from '../stores/pokemon'
 import { useSearchStore } from '../stores/search'
-import Card from './Card.vue'
 import PokemonSearch from './PokemonSearch.vue'
 
-const randomPokemon = Math.floor(Math.random() * 1026)
-const mon = ref(randomPokemon)
+const mon = ref(Math.floor(Math.random() * 1026))
 const errored = ref(false)
 const loading = ref(true)
 
 const monStore = usePokemonStore()
-const { fetchAllMons, fullMonList } = useSearchStore()
+const { fetchAllMons } = useSearchStore()
 
 async function getPokemon (pokemon = null) {
   loading.value = true
@@ -32,198 +29,143 @@ async function getPokemon (pokemon = null) {
 }
 
 onMounted(async () => {
-  await fetchAllMons()
-  await monStore.fetchPokemon(mon.value)
+  await Promise.all([
+    fetchAllMons(),
+    monStore.fetchPokemon(mon.value)
+  ])
   loading.value = false
 })
 </script>
 
 <template>
   <h1>Pokedex</h1>
-  <section class="pokedex__container">
-    <section v-if="loading">
-      <p>
-        Fetching Pokemon...
-      </p>
-      <vue-feather
-        type="settings"
-        animation="spin"
-      />
-    </section>
-    <card v-if="!loading && !errored">
-      <template #actions>
-        <h2>
-          {{ capitalize(monStore.currentMon.name) }} #{{ monStore.nationalDex }}
-        </h2>
-      </template>
-      <template #main>
-        <div class="card__img">
+  <div class="pokedex__container">
+    <article class="pokedex">
+      <section class="pokedex__imgs">
+        <div class="panel panel__sprite panel--right-corner">
+          <img :src="monStore.currentMon.sprite">
+        </div>
+        <div class="panel panel__artwork panel--right-corner">
+          <h2 class="mon-name">
+            {{ monStore.currentMon.name }} #{{ monStore.nationalDex }}
+          </h2>
           <img
-            :src="monStore.currentMon.sprite"
-            alt="Pokemon"
+            class="pl-5"
+            :src="monStore.artwork"
           >
         </div>
-        <div class="flavor-text">
+      </section>
+      <section class="pokedex__text">
+        <article class="panel panel__flavor">
+          <div class="panel panel__types panel--right-corner">
+            <span
+              v-for="monType in monStore.currentMon.types"
+              :key="monType"
+              :class="['type', monType]"
+            >
+              {{ capitalize(monType) }}
+            </span>
+            <span>{{ monStore.genera }}</span>
+          </div>
           <p>{{ monStore.flavorText }}</p>
-        </div>
-      </template>
-
-      <template #text>
-        <section class="genera">
-          {{ monStore.genera }}
-        </section>
-        <section class="types">
-          <span
-            v-for="monType in monStore.currentMon.types"
-            :key="monType"
-            :class="['type', monType]"
-          >
-            {{ capitalize(monType) }}
-          </span>
-        </section>
-        <section class="details">
-          <table class="mb-1">
-            <tr>
-              <th>National Dex</th>
-              <th>Height</th>
-              <th>Weight</th>
-              <th>Generation</th>
-              <th>Legendary</th>
-            </tr>
-            <tr>
-              <td>{{ monStore.nationalDex }}</td>
-              <td>{{ monStore.currentMon.height }}cm</td>
-              <td>{{ monStore.currentMon.weight }}kg</td>
-              <td>{{ monStore.generation }}</td>
-              <td>
+        </article>
+      </section>
+      <section class="pokedex__details">
+        <article class="panel">
+          <ul>
+            <li><strong>Name</strong>: {{ capitalize(monStore.currentMon.name) }}</li>
+            <li><strong>National Dex</strong>: {{ monStore.nationalDex }}</li>
+            <li><strong>Height</strong>: {{ monStore.currentMon.height }}cm</li>
+            <li><strong>Weight</strong>: {{ monStore.currentMon.weight }}kg</li>
+            <li><strong>Generation</strong>: {{ monStore.generation }}</li>
+            <li>
+              <strong>Legendary</strong>:
+              <span
+                v-if="monStore.currentMon.legendary"
+                class="legendary"
+              >
                 <vue-feather
-                  v-if="monStore.currentMon.legendary"
                   type="check"
                 />
-                <vue-feather
-                  v-else
-                  type="x"
-                />
-              </td>
-            </tr>
-          </table>
-        </section>
-        <section class="stats">
-          <table>
-            <tr>
-              <th
-                v-for="s in Object.keys(monStore.currentMon.stats)"
-                :key="s"
+              </span>
+              <span
+                v-else
+                class="legendary"
               >
-                {{ s }}
-              </th>
-            </tr>
-            <tr>
-              <td
-                v-for="(level, i) in Object.values(monStore.currentMon.stats)"
-                :key="i"
-              >
-                {{ level }}
-              </td>
-            </tr>
-          </table>
-        </section>
-      </template>
-    </card>
-    <section v-else-if="errored">
-      <h2>Pokemon Not Found</h2>
-    </section>
-    <pokemon-search>
-      <template #controls>
-        <section class="controls">
-          <label>Search for a Pokemon: </label>
-          <simple-typeahead
-            id="pokemonSearch"
-            class="control"
-            placeholder="By Name"
-            :items="fullMonList.map(p => p.name)"
-            :min-input-length="2"
-            @select-item="getPokemon"
-          />
-          <input
-            v-model="mon"
-            class="mb-1 control"
-            placeholder="By ID"
-            @change="getPokemon()"
-          >
-          <div>
-            <button
-              class="ml-1 btn btn__primary"
-              @click="getPokemon(Math.floor(Math.random() * 1026))"
+                <vue-feather type="x" />
+              </span>
+            </li>
+          </ul>
+        </article>
+        <article class="panel">
+          <ul>
+            <li
+              v-for="([statName, statLevel]) in Object.entries(monStore.currentMon.stats)"
+              :key="statName"
             >
-              Random
-            </button>
-          </div>
-        </section>
-      </template>
-      <template #artwork>
-        <div v-if="!loading">
-          <img :src="monStore.artwork">
-        </div>
-        <div
-          v-else
-          class="center"
-        >
-          <vue-feather
-            type="settings"
-            animation="spin"
-          />
-        </div>
-      </template>
-    </pokemon-search>
-  </section>
+              <strong>{{ capitalize(statName) }}</strong>: {{ statLevel }}
+            </li>
+          </ul>
+        </article>
+      </section>
+    </article>
+    <pokemon-search @select-mon="getPokemon" />
+  </div>
 </template>
 
 <style scoped>
-.center {
-  text-align: center;
-  vertical-align: middle;
-}
-.details,
-.stats {
-  display: flex;
-  justify-content: center;
+.mon-name {
+  width: 15rem;
 }
 
-.info {
+ul {
+  list-style-type: none;
+  padding: 0.5rem;
+  margin: 0;
+}
+
+li {
+  border-bottom: 1px solid var(--lightgrey);
+}
+
+li:last-child {
+  border: none;
+}
+
+.pokedex {
+  display: grid;
+  gap: 1rem;
+}
+.pokedex__imgs {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  gap: 1rem;
+}
+
+.pokedex__details {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-.heading {
-  font-weight: bold;
-}
-
-h1 {
-  margin-top: 0;
-}
-
-th,
-td {
-  text-transform: capitalize;
-  padding: 0.5rem;
-  border: 1px solid var(--lightgrey);
-  text-align: center;
-}
-
-input {
-  margin-top: 1rem;
-}
-
-table {
-  border-collapse: collapse;
+.legendary i {
+  vertical-align: middle;
 }
 
 @media (prefers-color-scheme: light) {
+  li {
+    border-color: var(--dark);
+  }
+}
 
-  th,
-  td {
-    border-color: var(--char);
+@media only screen and (max-width: 768px) {
+  .mon-name {
+    display: none;
+  }
+
+  .pokedex__imgs,
+  .pokedex__details {
+    grid-template-columns: 1fr;
   }
 }
 </style>
