@@ -4,6 +4,7 @@
   --dark: hsl(208, 37%, 20%);
   --accent: hsl(8, 49%, 51%);
   --accent-lighten: hsl(8, 65%, 57%);
+  --error: hsl(349, 100%, 35%);
   --shadow: hsla(0, 0%, 0%, 0.13);
   --lightgrey: hsl(60, 3%, 93%);
   --char: hsl(0, 4%, 22%);
@@ -67,6 +68,10 @@ footer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+.alert {
+  transition: 0.4s;
 }
 
 @media (prefers-color-scheme: light) {

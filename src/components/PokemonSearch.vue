@@ -1,7 +1,18 @@
 <script setup>
 import SimpleTypeahead from 'vue3-simple-typeahead'
 import { useSearchStore } from '../stores/search'
+import Alert from './Alert.vue'
 
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  errored: {
+    type: Boolean,
+    default: false
+  }
+})
 const emits = defineEmits(['selectMon'])
 const searchStore = useSearchStore()
 </script>
@@ -9,8 +20,8 @@ const searchStore = useSearchStore()
 <template>
   <article>
     <h2>Search</h2>
-
     <button
+      :disabled="props.loading"
       class="ml-1 btn btn__primary"
       @click="emits('selectMon', Math.floor(Math.random() * 1026))"
     >
@@ -33,13 +44,32 @@ const searchStore = useSearchStore()
         id="idSearch"
         class="mb-1 control"
         placeholder="By ID"
+        type="number"
         @change="el => emits('selectMon', el.target.value)"
       >
     </section>
+    <transition>
+      <div v-if="props.errored">
+        <alert
+          type="error"
+          text="Pokemon not found"
+        />
+      </div>
+    </transition>
   </article>
 </template>
 
 <style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
 label {
   display: block;
 }

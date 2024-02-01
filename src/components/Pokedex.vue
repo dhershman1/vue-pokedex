@@ -43,7 +43,9 @@ onMounted(async () => {
     <article class="pokedex">
       <section class="pokedex__imgs">
         <div class="panel panel__sprite panel--right-corner">
-          <img :src="monStore.currentMon.sprite">
+          <img
+            :src="monStore.currentMon.sprite"
+          >
         </div>
         <div class="panel panel__artwork panel--right-corner">
           <h2 class="mon-name">
@@ -56,7 +58,10 @@ onMounted(async () => {
         </div>
       </section>
       <section class="pokedex__text">
-        <article class="panel panel__flavor">
+        <article
+          v-if="!loading"
+          class="panel panel__flavor"
+        >
           <div class="panel panel__types panel--right-corner">
             <span
               v-for="monType in monStore.currentMon.types"
@@ -68,6 +73,15 @@ onMounted(async () => {
             <span>{{ monStore.genera }}</span>
           </div>
           <p>{{ monStore.flavorText }}</p>
+        </article>
+        <article
+          v-else
+          class="panel panel--loading"
+        >
+          <vue-feather
+            type="settings"
+            animation="spin"
+          />
         </article>
       </section>
       <section class="pokedex__details">
@@ -109,7 +123,11 @@ onMounted(async () => {
         </article>
       </section>
     </article>
-    <pokemon-search @select-mon="getPokemon" />
+    <pokemon-search
+      :loading="loading"
+      :errored="errored"
+      @select-mon="getPokemon"
+    />
   </div>
 </template>
 
@@ -150,6 +168,11 @@ li:last-child {
 
 .legendary i {
   vertical-align: middle;
+}
+
+.panel--loading {
+  text-align: center;
+  padding: 1rem;
 }
 
 @media (prefers-color-scheme: light) {
