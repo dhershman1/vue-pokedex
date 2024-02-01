@@ -10,7 +10,7 @@ const errored = ref(false)
 const loading = ref(true)
 
 const monStore = usePokemonStore()
-const searchStore = useSearchStore()
+const { fetchAllMons } = useSearchStore()
 
 async function getPokemon (pokemon = null) {
   loading.value = true
@@ -30,7 +30,7 @@ async function getPokemon (pokemon = null) {
 
 onMounted(async () => {
   await Promise.all([
-    searchStore.fetchAllMons(),
+    fetchAllMons(),
     monStore.fetchPokemon(mon.value)
   ])
   loading.value = false
