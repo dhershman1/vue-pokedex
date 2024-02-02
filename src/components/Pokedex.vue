@@ -36,6 +36,13 @@ onMounted(async () => {
 <template>
   <h1>Pokedex</h1>
   <div class="pokedex__container">
+    <div v-if="searchStore.loading" class="overlay">
+      <vue-feather
+        type="settings"
+        animation="spin"
+        size="10rem"
+      />
+    </div>
     <article class="pokedex">
       <section class="pokedex__imgs">
         <div class="panel panel__sprite panel--right-corner">
@@ -126,6 +133,21 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 1100;
+  display: block;
+  top: 0;
+  left: 0;
+}
+
+.overlay i {
+  text-align: center;
+  color: var(--lightgrey);
+}
 .mon-name {
   width: 15rem;
 }
