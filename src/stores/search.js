@@ -10,9 +10,11 @@ export const useSearchStore = defineStore('search', () => {
   const fullMonList = ref([])
   const selectedMon = ref('')
   const loading = ref(false)
+  const errored = ref(false)
 
   async function selectRandomMon () {
     loading.value = true
+    errored.value = false
     const mon = step(uniform(fullMonList.value), new Date().getMilliseconds())
 
     await pokeStore.fetchMonByUrl(mon[0].url)
@@ -28,6 +30,7 @@ export const useSearchStore = defineStore('search', () => {
   }
 
   return {
+    errored,
     loading,
     fullMonList,
     fetchAllMons,

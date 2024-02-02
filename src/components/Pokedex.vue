@@ -6,7 +6,6 @@ import { useSearchStore } from '../stores/search'
 import PokemonSearch from './PokemonSearch.vue'
 
 const mon = ref(1)
-const errored = ref(false)
 const monStore = usePokemonStore()
 const searchStore = useSearchStore()
 
@@ -18,9 +17,9 @@ async function getPokemon (pokemon = null) {
 
   try {
     await monStore.fetchPokemon(mon.value)
-    errored.value = false
+    searchStore.errored = false
   } catch (e) {
-    errored.value = true
+    searchStore.errored = true
   } finally {
     searchStore.loading = false
   }
@@ -121,7 +120,6 @@ onMounted(async () => {
       </section>
     </article>
     <pokemon-search
-      :errored="errored"
       @select-mon="getPokemon"
     />
   </div>

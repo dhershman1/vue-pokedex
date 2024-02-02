@@ -3,12 +3,6 @@ import SimpleTypeahead from 'vue3-simple-typeahead'
 import { useSearchStore } from '../stores/search'
 import Alert from './Alert.vue'
 
-const props = defineProps({
-  errored: {
-    type: Boolean,
-    default: false
-  }
-})
 const emits = defineEmits(['selectMon'])
 const searchStore = useSearchStore()
 </script>
@@ -45,7 +39,7 @@ const searchStore = useSearchStore()
       >
     </section>
     <transition>
-      <div v-if="props.errored">
+      <div v-if="searchStore.errored">
         <alert
           type="error"
           text="Pokemon not found"
