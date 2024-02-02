@@ -14,6 +14,7 @@
     "js-levenshtein": "^1.1.6",
     "kyanite": "^2.0.1",
     "pinia": "^2.1.7",
+    "randoscando": "^1.0.1",
     "vue": "^3.3.11",
     "vue-feather": "^2.0.0",
     "vue3-simple-typeahead": "^1.0.11"

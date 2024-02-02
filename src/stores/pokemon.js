@@ -49,20 +49,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
     return found.flavor_text
   }
 
-  async function fetchSpeciesData (speciesLink) {
-    const species = await axios.get(speciesLink)
-
-    return species.data
-  }
-
-  async function fetchPokemon (pokemon) {
-    const { data: mon } = await axios.get(`${baseURL}/pokemon/${pokemon}`)
-    // const speciesData = await fetchSpeciesData(mon.species.url)
-
-    const [speciesData] = await Promise.all([
-      fetchSpeciesData(mon.species.url)
-    ])
-
+  function mapMonToData (mon, speciesData) {
     flavorText.value = findEnFlavorText(speciesData.flavor_text_entries)
     genera.value = findEnLocale(speciesData.genera)?.genus ?? ''
     nationalDex.value = speciesData.pokedex_numbers.find(
@@ -88,6 +75,28 @@ export const usePokemonStore = defineStore('pokemon', () => {
     return mon
   }
 
+  async function fetchSpeciesData (speciesLink) {
+    const species = await axios.get(speciesLink)
+
+    return species.data
+  }
+
+  async function fetchPokemon (pokemon) {
+    const { data: mon } = await axios.get(`${baseURL}/pokemon/${pokemon}`)
+    const speciesData = await fetchSpeciesData(mon.species.url)
+
+    mapMonToData(mon, speciesData)
+
+    return mon
+  }
+
+  async function fetchMonByUrl (url) {
+    const { data: mon } = await axios.get(url)
+    const speciesData = await fetchSpeciesData(mon.species.url)
+
+    mapMonToData(mon, speciesData)
+  }
+
   return {
     artwork,
     currentMon,
@@ -96,6 +105,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
     flavorText,
     nationalDex,
     fetchPokemon,
+    fetchMonByUrl,
     fetchSpeciesData
   }
 })

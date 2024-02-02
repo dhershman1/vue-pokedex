@@ -4,10 +4,6 @@ import { useSearchStore } from '../stores/search'
 import Alert from './Alert.vue'
 
 const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false
-  },
   errored: {
     type: Boolean,
     default: false
@@ -21,9 +17,9 @@ const searchStore = useSearchStore()
   <article>
     <h2>Search</h2>
     <button
-      :disabled="props.loading"
+      :disabled="searchStore.loading"
       class="ml-1 btn btn__primary"
-      @click="emits('selectMon', Math.floor(Math.random() * 1026))"
+      @click="searchStore.selectRandomMon"
     >
       Random
     </button>

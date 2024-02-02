@@ -5,15 +5,13 @@ import { usePokemonStore } from '../stores/pokemon'
 import { useSearchStore } from '../stores/search'
 import PokemonSearch from './PokemonSearch.vue'
 
-const mon = ref(Math.floor(Math.random() * 1026))
+const mon = ref(1)
 const errored = ref(false)
-const loading = ref(true)
-
 const monStore = usePokemonStore()
-const { fetchAllMons } = useSearchStore()
+const searchStore = useSearchStore()
 
 async function getPokemon (pokemon = null) {
-  loading.value = true
+  searchStore.loading = true
   if (pokemon) {
     mon.value = pokemon
   }
@@ -24,16 +22,15 @@ async function getPokemon (pokemon = null) {
   } catch (e) {
     errored.value = true
   } finally {
-    loading.value = false
+    searchStore.loading = false
   }
 }
 
 onMounted(async () => {
-  await Promise.all([
-    fetchAllMons(),
-    monStore.fetchPokemon(mon.value)
-  ])
-  loading.value = false
+  await searchStore.fetchAllMons()
+  await searchStore.selectRandomMon()
+
+  searchStore.loading = false
 })
 </script>
 
@@ -59,7 +56,7 @@ onMounted(async () => {
       </section>
       <section class="pokedex__text">
         <article
-          v-if="!loading"
+          v-if="!searchStore.loading"
           class="panel panel__flavor"
         >
           <div class="panel panel__types panel--right-corner">
@@ -124,7 +121,6 @@ onMounted(async () => {
       </section>
     </article>
     <pokemon-search
-      :loading="loading"
       :errored="errored"
       @select-mon="getPokemon"
     />
