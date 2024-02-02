@@ -11,7 +11,6 @@
   "dependencies": {
     "axios": "^1.6.7",
     "feather-icons": "^4.29.1",
-    "js-levenshtein": "^1.1.6",
     "kyanite": "^2.0.1",
     "pinia": "^2.1.7",
     "randoscando": "^1.0.1",
